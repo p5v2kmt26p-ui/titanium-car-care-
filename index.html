@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Titanium One Car Care — Premium Auto Detailing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Figtree:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --orange: #fc5f2b;
+      --orange-lt: #fd7a4f;
+      --orange-dk: #e04a18;
+      --zinc-900: #18181b;
+      --zinc-800: #27272a;
+      --zinc-700: #3f3f46;
+      --zinc-500: #71717a;
+      --zinc-400: #a1a1aa;
+      --zinc-300: #d4d4d8;
+      --zinc-200: #e4e4e7;
+      --zinc-100: #f4f4f5;
+      --zinc-50:  #fafafa;
+      --white: #ffffff;
+      --hero-bg: #000000;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: #fc5f2b transparent;
+      font-size: 1rem;
+    }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-thumb { background: #fc5f2b; border-radius: 0; border: none; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+    body {
+      font-family: 'Figtree', Arial, sans-serif;
+      font-size: 1rem; font-weight: 400; line-height: 1.6;
+      color: var(--zinc-900); background: var(--white); overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center;
+      padding: 0 3rem; height: 5rem;
+      border-bottom: 1px solid transparent;
+      transition: background 0.35s, border-color 0.35s, backdrop-filter 0.35s;
+    }
+    nav.scrolled {
+      background: rgba(0,0,0,0.92);
+      backdrop-filter: blur(16px);
+      border-color: rgba(252,95,43,0.15);
+    }
+    .nav-logo img { height: 2.75rem; object-fit: contain; display: block; }
+    .nav-links {
+      display: flex; gap: 2rem; list-style: none;
+      margin: 0 auto;
+    }
+    .nav-links a {
+      font-size: 0.875rem; font-weight: 500;
+      color: rgba(255,255,255,0.75); text-decoration: none;
+      transition: color 0.2s;
+    }
+    nav.scrolled .nav-links a { color: rgba(255,255,255,0.65); }
+    .nav-links a:hover { color: var(--orange); }
+    .nav-cta {
+      font-size: 0.875rem; font-weight: 600; letter-spacing: 0.01em;
+      background: var(--orange); color: white;
+      padding: 0.625rem 1.5rem; border-radius: 9999px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .nav-cta:hover { background: var(--orange-lt); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(252,95,43,0.3); }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      background: var(--hero-bg);
+      display: grid; grid-template-columns: 1fr 1fr;
+      position: relative; overflow: hidden;
+    }
+
+    .hero-grain {
+      position: absolute; inset: 0; z-index: 2; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.7;
+    }
+
+    /* ── LAMP EFFECT (orange studio spotlight) ── */
+    .hero-lamp {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      overflow: hidden;
+    }
+    /* Scale wrapper to exaggerate the conic cone vertically */
+    .hero-lamp-scale {
+      position: absolute; inset: 0;
+      transform: scaleY(1.25);
+      transform-origin: top center;
+    }
+    .hero-lamp-beam-l {
+      position: absolute; top: 0; right: 50%;
+      width: 34rem; height: 14rem;
+      background: conic-gradient(from 70deg at center top, rgba(252,95,43,0.9), transparent 35%);
+      animation: lamp-open 1.1s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+    .hero-lamp-beam-r {
+      position: absolute; top: 0; left: 50%;
+      width: 34rem; height: 14rem;
+      background: conic-gradient(from 290deg at center top, transparent 65%, rgba(252,95,43,0.9));
+      animation: lamp-open 1.1s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+    /* mask the outer edges of each beam */
+    .hero-lamp-beam-l::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to right, transparent, #000 100%);
+    }
+    .hero-lamp-beam-r::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to left, transparent, #000 100%);
+    }
+    /* mask the bottom of beams so they fade into the scene */
+    .hero-lamp-beam-l::before, .hero-lamp-beam-r::before {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 60%;
+      background: linear-gradient(to top, #000, transparent);
+    }
+    .hero-lamp-glow-sphere {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 28rem; height: 11rem;
+      border-radius: 50%;
+      background: var(--orange);
+      opacity: 0;
+      filter: blur(56px);
+      animation: lamp-glow 1.1s 0.3s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+    .hero-lamp-bright {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, calc(-50% - 7rem));
+      width: 0; height: 2px;
+      background: var(--orange);
+      opacity: 0.85;
+      border-radius: 9999px;
+      box-shadow: 0 0 18px 6px rgba(252,95,43,0.6);
+      animation: lamp-line 1.1s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+    .hero-lamp-underblock {
+      position: absolute; top: calc(50% + 5.5rem); left: 0; right: 0; bottom: 0;
+      background: #000;
+    }
+    @keyframes lamp-open {
+      from { opacity: 0.5; width: 15rem; }
+      to   { opacity: 1;   width: 34rem; }
+    }
+    @keyframes lamp-glow {
+      from { opacity: 0; width: 14rem; }
+      to   { opacity: 0.45; width: 28rem; }
+    }
+    @keyframes lamp-line {
+      from { width: 8rem; }
+      to   { width: 30rem; }
+    }
+
+    .hero-left {
+      position: relative; z-index: 3;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 7rem 3.5rem 5rem 4.5rem;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      border: 1px solid rgba(252,95,43,0.4);
+      background: rgba(252,95,43,0.12);
+      color: var(--orange);
+      font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.375rem 1rem; border-radius: 9999px;
+      width: fit-content; margin-bottom: 1.75rem;
+    }
+    .hero-badge::before {
+      content: ''; display: block;
+      width: 6px; height: 6px; border-radius: 50%; background: var(--orange);
+    }
+    .hero-h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2.75rem, 4.5vw, 4.75rem);
+      font-weight: 800; line-height: 1.04; letter-spacing: -0.03em;
+      color: white; margin-bottom: 1.5rem;
+    }
+    .hero-h1 .accent { color: var(--orange); display: block; }
+    .hero-p {
+      font-size: 1.0625rem; line-height: 1.75;
+      color: rgba(255,255,255,0.55); max-width: 420px; margin-bottom: 2.5rem;
+    }
+    .hero-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--orange); color: white;
+      font-family: 'Figtree', sans-serif;
+      font-size: 0.9375rem; font-weight: 600;
+      padding: 0.875rem 2rem; border-radius: 9999px;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .btn-primary:hover { background: var(--orange-lt); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(252,95,43,0.38); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      color: rgba(255,255,255,0.65); font-size: 0.9375rem; font-weight: 500;
+      text-decoration: none; background: none; border: none; cursor: pointer;
+      transition: color 0.2s;
+    }
+    .btn-ghost:hover { color: white; }
+    .btn-ghost .arrow { transition: transform 0.2s; }
+    .btn-ghost:hover .arrow { transform: translateX(4px); }
+    .hero-trust {
+      display: flex; align-items: center; gap: 0.875rem; margin-top: 2.5rem;
+      padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .trust-stars { color: #fbbf24; font-size: 0.875rem; letter-spacing: 2px; }
+    .trust-text { font-size: 0.8125rem; color: rgba(255,255,255,0.45); }
+    .trust-text strong { color: rgba(255,255,255,0.8); font-weight: 600; }
+    .trust-divider { width: 1px; height: 1.25rem; background: rgba(255,255,255,0.15); }
+    .trust-avatars { display: flex; }
+    .trust-avatar {
+      width: 1.875rem; height: 1.875rem; border-radius: 50%;
+      border: 2px solid #000; margin-left: -0.5rem;
+      background: var(--zinc-700); overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.625rem; font-weight: 700; color: rgba(255,255,255,0.7);
+    }
+    .trust-avatar:first-child { margin-left: 0; }
+    .hero-right {
+      position: relative; z-index: 3; overflow: hidden;
+    }
+    .hero-right-img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; object-fit: cover; object-position: center;
+      display: block;
+    }
+    .hero-right-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, #000 0%, rgba(0,0,0,0.2) 30%, transparent 55%),
+                  linear-gradient(to top, #000 0%, transparent 35%);
+    }
+    .hero-float-card {
+      position: absolute; bottom: 2.5rem; left: 2rem;
+      background: rgba(10,10,10,0.88); backdrop-filter: blur(16px);
+      border: 1px solid rgba(252,95,43,0.2);
+      border-radius: 1rem; padding: 1.125rem 1.375rem;
+      display: flex; align-items: center; gap: 1rem;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 2px 8px rgba(252,95,43,0.08);
+      z-index: 3;
+    }
+    .float-icon {
+      width: 2.75rem; height: 2.75rem; border-radius: 0.75rem;
+      background: linear-gradient(135deg, var(--orange), #f97316);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; flex-shrink: 0;
+    }
+    .float-label { font-size: 0.6875rem; color: rgba(255,255,255,0.4); font-weight: 500; margin-bottom: 0.125rem; }
+    .float-val {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9375rem; font-weight: 700; color: white;
+    }
+
+    /* ─── HOW IT WORKS ─── */
+    #how {
+      padding: 6rem 4.5rem;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; align-items: center;
+      background: white;
+    }
+    .section-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.625rem;
+      font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--orange); margin-bottom: 1.25rem;
+    }
+    .section-eyebrow::before {
+      content: ''; width: 1.5rem; height: 2px; background: var(--orange); display: block;
+    }
+    .section-h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(1.875rem, 2.75vw, 2.875rem);
+      font-weight: 700; line-height: 1.12; letter-spacing: -0.025em;
+      color: var(--zinc-900); margin-bottom: 2.75rem;
+    }
+    .steps {
+      display: flex; flex-direction: column; gap: 0;
+      border-top: 1px solid var(--zinc-200);
+    }
+    .step {
+      display: flex; align-items: flex-start; gap: 1.5rem;
+      padding: 1.625rem 0;
+      border-bottom: 1px solid var(--zinc-200);
+      transition: background 0.2s;
+      cursor: default;
+    }
+    .step:hover .step-num { background: var(--orange); color: white; border-color: var(--orange); }
+    .step-num {
+      flex-shrink: 0;
+      width: 2.25rem; height: 2.25rem; border-radius: 50%;
+      border: 1.5px solid var(--zinc-300);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8125rem; font-weight: 700; color: var(--zinc-500);
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      margin-top: 0.125rem;
+    }
+    .step-body { flex: 1; }
+    .step-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem; font-weight: 600; color: var(--zinc-900);
+      margin-bottom: 0.25rem;
+    }
+    .step-desc { font-size: 0.9375rem; line-height: 1.65; color: var(--zinc-500); }
+    .how-right {
+      border-radius: 1.5rem; overflow: hidden;
+      position: relative; aspect-ratio: 3/4;
+      background: var(--zinc-100);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.1);
+    }
+    .how-right-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .how-badge-card {
+      position: absolute; bottom: 1.75rem; left: 1.75rem; right: 1.75rem;
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+      border-radius: 1rem; padding: 1.125rem 1.375rem;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    }
+    .hbc-left { display: flex; align-items: center; gap: 0.875rem; }
+    .hbc-icon {
+      width: 2.5rem; height: 2.5rem; border-radius: 0.625rem;
+      background: rgba(252,95,43,0.1); border: 1px solid rgba(252,95,43,0.2);
+      display: flex; align-items: center; justify-content: center; font-size: 1.125rem; flex-shrink: 0;
+    }
+    .hbc-label { font-size: 0.6875rem; color: var(--zinc-400); font-weight: 500; }
+    .hbc-val {
+      font-family: 'Outfit', sans-serif; font-size: 0.9375rem; font-weight: 700; color: var(--zinc-900);
+    }
+    .hbc-badge {
+      background: rgba(34,197,94,0.12); color: #16a34a;
+      font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.04em;
+      padding: 0.3rem 0.75rem; border-radius: 9999px;
+    }
+
+    /* ─── SERVICES GRID ─── */
+    #services {
+      padding: 5.5rem 4.5rem;
+      background: var(--zinc-50);
+    }
+    .services-head {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 3rem;
+    }
+    .services-head-left { flex: 1; }
+    .link-arrow {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      font-size: 0.875rem; font-weight: 600; color: var(--orange);
+      text-decoration: none; margin-bottom: 0.25rem;
+      transition: gap 0.2s;
+    }
+    .link-arrow:hover { gap: 0.625rem; }
+    .services-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem;
+    }
+    .svc-card {
+      background: white; border-radius: 1.25rem;
+      border: 1px solid var(--zinc-200); overflow: hidden;
+      transition: transform 0.25s cubic-bezier(.22,1,.36,1), box-shadow 0.25s, border-color 0.25s;
+    }
+    .svc-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 56px rgba(0,0,0,0.09);
+      border-color: rgba(252,95,43,0.25);
+    }
+    .svc-img {
+      width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;
+      background: var(--zinc-200);
+    }
+    .svc-body { padding: 1.5rem; }
+    .svc-tag {
+      display: inline-block;
+      font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--orange); background: rgba(252,95,43,0.08);
+      padding: 0.25rem 0.75rem; border-radius: 9999px; margin-bottom: 0.75rem;
+    }
+    .svc-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.125rem; font-weight: 700; color: var(--zinc-900); margin-bottom: 0.5rem;
+    }
+    .svc-desc { font-size: 0.875rem; line-height: 1.65; color: var(--zinc-500); }
+    .svc-foot {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--zinc-100);
+    }
+    .svc-price {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.125rem; font-weight: 700; color: var(--zinc-900);
+    }
+    .svc-price small { font-size: 0.8rem; font-weight: 400; color: var(--zinc-400); }
+    .svc-more {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      font-size: 0.8125rem; font-weight: 600; color: var(--orange);
+      text-decoration: none; transition: gap 0.2s;
+    }
+    .svc-more:hover { gap: 0.5rem; }
+
+    /* ─── DARK PROMO ─── */
+    #promo {
+      background: #000;
+      padding: 7rem 4.5rem;
+      position: relative; overflow: hidden; text-align: center;
+    }
+    #promo::before {
+      content: '';
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 60%; height: 80%;
+      background: radial-gradient(ellipse, rgba(252,95,43,0.18) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    #promo::after {
+      content: '';
+      position: absolute; inset: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.5;
+    }
+    .promo-inner { position: relative; z-index: 2; max-width: 780px; margin: 0 auto; }
+    .promo-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.625rem;
+      font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--orange); margin-bottom: 1.5rem;
+    }
+    .promo-eyebrow::before { content: ''; width: 1.5rem; height: 2px; background: var(--orange); display: block; }
+    .promo-h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2.25rem, 4.5vw, 4rem);
+      font-weight: 800; line-height: 1.08; letter-spacing: -0.03em;
+      color: white; margin-bottom: 1.5rem;
+    }
+    .promo-h2 em { font-style: normal; color: var(--orange); }
+    .promo-p {
+      font-size: 1.0625rem; line-height: 1.75;
+      color: rgba(255,255,255,0.45);
+      max-width: 500px; margin: 0 auto 3rem;
+    }
+    .promo-stats {
+      display: flex; justify-content: center; gap: 4rem;
+      padding-top: 3rem;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .promo-stat-num {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.75rem; font-weight: 800; color: var(--orange);
+      line-height: 1; letter-spacing: -0.03em;
+    }
+    .promo-stat-label {
+      font-size: 0.8125rem; font-weight: 500;
+      color: rgba(255,255,255,0.35); margin-top: 0.4rem;
+    }
+
+    /* ─── TESTIMONIALS ─── */
+    #testimonials {
+      padding: 6rem 4.5rem;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; align-items: center;
+      background: white;
+    }
+    .testi-left { min-width: 0; }
+    .testi-cards { display: flex; flex-direction: column; gap: 1.125rem; }
+    .testi-card {
+      background: var(--zinc-50); border: 1px solid var(--zinc-200); border-radius: 1.25rem;
+      padding: 1.5rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .testi-card:hover { border-color: rgba(252,95,43,0.25); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+    .testi-stars { color: #f59e0b; font-size: 0.8125rem; letter-spacing: 2px; margin-bottom: 0.75rem; }
+    .testi-text {
+      font-size: 0.9375rem; line-height: 1.7; color: var(--zinc-700);
+      font-style: italic; margin-bottom: 1.125rem;
+    }
+    .testi-author { display: flex; align-items: center; gap: 0.75rem; }
+    .testi-av {
+      width: 2.25rem; height: 2.25rem; border-radius: 50%;
+      background: linear-gradient(135deg, var(--orange) 0%, #f97316 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.75rem; font-weight: 700; color: white; flex-shrink: 0;
+    }
+    .testi-name { font-size: 0.875rem; font-weight: 600; color: var(--zinc-900); }
+    .testi-vehicle { font-size: 0.75rem; color: var(--zinc-400); margin-top: 0.1rem; }
+    .testi-right {
+      border-radius: 1.5rem; overflow: hidden; position: relative;
+      aspect-ratio: 4/5; background: var(--zinc-100);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.1);
+    }
+    .testi-right-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .testi-right-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+    }
+    .testi-pull {
+      position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem;
+    }
+    .testi-pull-quote {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem; font-weight: 700; color: white; line-height: 1.4;
+      margin-bottom: 0.5rem;
+    }
+    .testi-pull-attr { font-size: 0.8125rem; color: rgba(255,255,255,0.55); }
+
+    /* ─── CTA FINAL ─── */
+    #cta-final {
+      padding: 6rem 4.5rem;
+      background: var(--zinc-50);
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; align-items: center;
+    }
+    .cta-img-wrap {
+      border-radius: 1.5rem; overflow: hidden; position: relative;
+      aspect-ratio: 4/3; background: var(--zinc-200);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.08);
+    }
+    .cta-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .cta-img-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(252,95,43,0.15) 0%, transparent 60%);
+      mix-blend-mode: multiply;
+    }
+    .cta-right { min-width: 0; }
+    .cta-h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(1.875rem, 3vw, 3rem);
+      font-weight: 800; line-height: 1.1; letter-spacing: -0.03em;
+      color: var(--zinc-900); margin-bottom: 1.25rem;
+    }
+    .cta-h2 em { font-style: normal; color: var(--orange); }
+    .cta-p {
+      font-size: 1rem; line-height: 1.75;
+      color: var(--zinc-500); margin-bottom: 2.25rem;
+    }
+    .cta-actions { display: flex; gap: 0.875rem; flex-wrap: wrap; }
+    .btn-dark {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--zinc-900); color: white;
+      font-size: 0.9375rem; font-weight: 600;
+      padding: 0.875rem 2rem; border-radius: 9999px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-dark:hover { background: var(--zinc-700); transform: translateY(-1px); }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: transparent; color: var(--zinc-900);
+      font-size: 0.9375rem; font-weight: 600;
+      padding: 0.875rem 2rem; border-radius: 9999px;
+      border: 1.5px solid var(--zinc-300); text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--orange); color: var(--orange); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #000;
+      padding: 3.5rem 4.5rem 2rem;
+    }
+    .footer-top {
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid rgba(252,95,43,0.12); padding-bottom: 2rem; margin-bottom: 1.75rem;
+      gap: 2rem; flex-wrap: wrap;
+    }
+    .footer-logo img { height: 2.25rem; object-fit: contain; }
+    .footer-nav { display: flex; gap: 2rem; list-style: none; flex-wrap: wrap; }
+    .footer-nav a {
+      font-size: 0.875rem; color: rgba(255,255,255,0.45); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-nav a:hover { color: white; }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem; flex-wrap: wrap;
+    }
+    .footer-copy { font-size: 0.8125rem; color: rgba(255,255,255,0.3); }
+    .footer-copy em { color: var(--orange); font-style: normal; }
+    .footer-social { display: flex; gap: 0.625rem; }
+    .social-btn {
+      width: 2.25rem; height: 2.25rem; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.6875rem; font-weight: 700; font-family: 'Outfit', sans-serif;
+      color: rgba(255,255,255,0.4); text-decoration: none;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .social-btn:hover { border-color: var(--orange); color: var(--orange); background: rgba(252,95,43,0.08); }
+
+    /* ─── SCROLL REVEAL ─── */
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.65s cubic-bezier(.22,1,.36,1), transform 0.65s cubic-bezier(.22,1,.36,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: 0.08s; }
+    .d2 { transition-delay: 0.16s; }
+    .d3 { transition-delay: 0.24s; }
+    .d4 { transition-delay: 0.32s; }
+    .d5 { transition-delay: 0.40s; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1100px) {
+      nav { padding: 0 2rem; }
+      #hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding: 8rem 2.5rem 5rem; max-width: 600px; }
+      #how { grid-template-columns: 1fr; gap: 3rem; padding: 5rem 2.5rem; }
+      .how-right { max-width: 480px; }
+      #services { padding: 4.5rem 2.5rem; }
+      #promo { padding: 5rem 2.5rem; }
+      .promo-stats { gap: 2.5rem; }
+      #testimonials { grid-template-columns: 1fr; gap: 3rem; padding: 4.5rem 2.5rem; }
+      .testi-right { max-width: 480px; }
+      #cta-final { grid-template-columns: 1fr; gap: 3rem; padding: 4.5rem 2.5rem; }
+      footer { padding: 3rem 2.5rem 1.5rem; }
+      .footer-top { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      nav { padding: 0 1.25rem; }
+      .hero-left { padding: 7rem 1.5rem 4rem; }
+      .hero-h1 { font-size: 2.5rem; }
+      #how { padding: 4rem 1.5rem; }
+      #services { padding: 4rem 1.5rem; }
+      .services-grid { grid-template-columns: 1fr; }
+      #promo { padding: 4rem 1.5rem; }
+      .promo-stats { gap: 1.5rem; flex-wrap: wrap; }
+      #testimonials { padding: 4rem 1.5rem; }
+      #cta-final { padding: 4rem 1.5rem; }
+      footer { padding: 2.5rem 1.5rem 1.25rem; }
+      .footer-bottom { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="#hero" class="nav-logo">
+    <img src="brand%20assets/Gemini_Generated_Image_y40iw2y40iw2y40i.png" alt="Titanium One Car Care" />
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#testimonials">Reviews</a></li>
+    <li><a href="#cta-final">Contact</a></li>
+  </ul>
+  <a href="tel:+1234567890" class="nav-cta">Book Now</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <!-- Orange lamp spotlight effect -->
+  <div class="hero-lamp">
+    <div class="hero-lamp-scale">
+      <div class="hero-lamp-beam-l"></div>
+      <div class="hero-lamp-beam-r"></div>
+      <div class="hero-lamp-glow-sphere"></div>
+      <div class="hero-lamp-bright"></div>
+      <div class="hero-lamp-underblock"></div>
+    </div>
+  </div>
+
+  <div class="hero-grain"></div>
+
+  <div class="hero-left">
+    <div class="hero-badge">Premium Auto Detailing</div>
+    <h1 class="hero-h1">
+      Get the finish<br>
+      your car<br>
+      <span class="accent">truly deserves.</span>
+    </h1>
+    <p class="hero-p">Professional car care that goes beyond the surface. From ceramic coatings to full detail — every service delivered with precision and pride.</p>
+    <div class="hero-actions">
+      <a href="#cta-final" class="btn-primary">
+        Book a Detail
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#services" class="btn-ghost">
+        Our Services
+        <span class="arrow">→</span>
+      </a>
+    </div>
+    <div class="hero-trust">
+      <div class="trust-avatars">
+        <div class="trust-avatar">MR</div>
+        <div class="trust-avatar">ST</div>
+        <div class="trust-avatar">JW</div>
+        <div class="trust-avatar">KL</div>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-stars">★★★★★</div>
+      <div class="trust-text"><strong>500+</strong> happy customers</div>
+    </div>
+  </div>
+
+  <div class="hero-right" style="position:relative;z-index:3;">
+    <img class="hero-right-img" src="hero-car.png" alt="Orange supercar premium detail" />
+    <div class="hero-right-overlay"></div>
+    <div class="hero-float-card">
+      <div class="float-icon">🏆</div>
+      <div>
+        <div class="float-label">Satisfaction Rate</div>
+        <div class="float-val">100% Guaranteed</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="how-left">
+    <div class="section-eyebrow reveal">How it works</div>
+    <h2 class="section-h2 reveal d1">Simple. Seamless.<br>Spotless.</h2>
+    <div class="steps">
+      <div class="step reveal d1">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <div class="step-title">Book Online</div>
+          <div class="step-desc">Choose your package and pick a date. Takes less than 2 minutes — no phone tag required.</div>
+        </div>
+      </div>
+      <div class="step reveal d2">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <div class="step-title">Drop It Off</div>
+          <div class="step-desc">Bring your vehicle to us, or request our mobile service. We'll handle everything from arrival.</div>
+        </div>
+      </div>
+      <div class="step reveal d3">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <div class="step-title">We Get to Work</div>
+          <div class="step-desc">Our detailers use only premium-grade products and proven techniques — no shortcuts, ever.</div>
+        </div>
+      </div>
+      <div class="step reveal d4">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <div class="step-title">Drive Proud</div>
+          <div class="step-desc">Pick up your vehicle looking better than the day you bought it. We guarantee you'll turn heads.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="how-right reveal d2">
+    <img class="how-right-img" src="detail-polishing.png" alt="Detailing in progress" />
+    <div class="how-badge-card">
+      <div class="hbc-left">
+        <div class="hbc-icon">✨</div>
+        <div>
+          <div class="hbc-label">Latest booking</div>
+          <div class="hbc-val">Full Ceramic Package</div>
+        </div>
+      </div>
+      <div class="hbc-badge">Confirmed</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES GRID -->
+<section id="services">
+  <div class="services-head">
+    <div>
+      <div class="section-eyebrow reveal">What we offer</div>
+      <h2 class="section-h2 reveal d1" style="margin-bottom:0">Our Services</h2>
+    </div>
+    <a href="#cta-final" class="link-arrow reveal d2">
+      View All Packages →
+    </a>
+  </div>
+
+  <div class="services-grid">
+    <div class="svc-card reveal d1">
+      <img class="svc-img" src="ferrari-garage.png" alt="Full Detail" />
+      <div class="svc-body">
+        <div class="svc-tag">Interior + Exterior</div>
+        <div class="svc-name">Full Detail</div>
+        <div class="svc-desc">Complete inside-out service. Deep clean, polish, and protect — leaving your vehicle showroom-ready from every angle.</div>
+      </div>
+      <div class="svc-foot">
+        <div class="svc-price">from AED 730 <small>/ sedan</small></div>
+        <a href="#cta-final" class="svc-more">Book →</a>
+      </div>
+    </div>
+
+    <div class="svc-card reveal d2">
+      <img class="svc-img" src="ceramic-apply.png" alt="Ceramic Coating" />
+      <div class="svc-body">
+        <div class="svc-tag">Protection</div>
+        <div class="svc-name">Ceramic Coating</div>
+        <div class="svc-desc">Nano-ceramic protection that repels water, dirt, and UV rays — keeping your paint flawless for years, not weeks.</div>
+      </div>
+      <div class="svc-foot">
+        <div class="svc-price">from AED 1,649 <small>/ sedan</small></div>
+        <a href="#cta-final" class="svc-more">Book →</a>
+      </div>
+    </div>
+
+    <div class="svc-card reveal d3">
+      <img class="svc-img" src="detail-polishing.png" alt="Paint Correction" />
+      <div class="svc-body">
+        <div class="svc-tag">Restoration</div>
+        <div class="svc-name">Paint Correction</div>
+        <div class="svc-desc">Remove swirl marks, scratches, and oxidation with multi-stage machine polishing for a mirror-perfect finish.</div>
+      </div>
+      <div class="svc-foot">
+        <div class="svc-price">from AED 1,280 <small>/ sedan</small></div>
+        <a href="#cta-final" class="svc-more">Book →</a>
+      </div>
+    </div>
+
+    <div class="svc-card reveal d4">
+      <img class="svc-img" src="interior-work.png" alt="Interior Detail" />
+      <div class="svc-body">
+        <div class="svc-tag">Interior</div>
+        <div class="svc-name">Interior Detail</div>
+        <div class="svc-desc">Deep vacuum, steam clean, leather conditioning, and odor elimination — a spotless, fresh-smelling cabin every time.</div>
+      </div>
+      <div class="svc-foot">
+        <div class="svc-price">from AED 327 <small>/ sedan</small></div>
+        <a href="#cta-final" class="svc-more">Book →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DARK PROMO -->
+<section id="promo">
+  <div class="promo-inner">
+    <div class="promo-eyebrow reveal">Our Standard</div>
+    <h2 class="promo-h2 reveal d1">Every detail starts with<br><em>100% commitment</em><br>to your vehicle.</h2>
+    <p class="promo-p reveal d2">We use only professional-grade, pH-balanced products from top automotive brands. No filler services, no shortcuts — just results that speak for themselves.</p>
+    <a href="#cta-final" class="btn-primary reveal d3" style="margin: 0 auto">
+      Get a Free Quote
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <div class="promo-stats reveal d4">
+      <div>
+        <div class="promo-stat-num">500+</div>
+        <div class="promo-stat-label">Cars Detailed</div>
+      </div>
+      <div>
+        <div class="promo-stat-num">5.0★</div>
+        <div class="promo-stat-label">Average Rating</div>
+      </div>
+      <div>
+        <div class="promo-stat-num">3+</div>
+        <div class="promo-stat-label">Years in Service</div>
+      </div>
+      <div>
+        <div class="promo-stat-num">100%</div>
+        <div class="promo-stat-label">Satisfaction Guaranteed</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="testi-left">
+    <div class="section-eyebrow reveal">Reviews</div>
+    <h2 class="section-h2 reveal d1">Real results.<br>Real reviews.</h2>
+    <div class="testi-cards">
+      <div class="testi-card reveal d1">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"My car looked like it just rolled off the showroom floor. Titanium One went above and beyond — the attention to detail is genuinely unmatched."</p>
+        <div class="testi-author">
+          <div class="testi-av">MR</div>
+          <div>
+            <div class="testi-name">Marcus R.</div>
+            <div class="testi-vehicle">2022 BMW 3 Series</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal d2">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Booked the ceramic coating and I'm blown away. Water beads off like nothing. Professional service, great communication, incredible result."</p>
+        <div class="testi-author">
+          <div class="testi-av">ST</div>
+          <div>
+            <div class="testi-name">Sofia T.</div>
+            <div class="testi-vehicle">2020 Mercedes C-Class</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card reveal d3">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Quick, thorough, and the results are amazing. My truck hadn't been detailed in years and they completely transformed it. 10/10."</p>
+        <div class="testi-author">
+          <div class="testi-av">JW</div>
+          <div>
+            <div class="testi-name">James W.</div>
+            <div class="testi-vehicle">2019 Ford F-150</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="testi-right reveal d2">
+    <img class="testi-right-img" src="ferrari-garage.png" alt="Satisfied customer" />
+    <div class="testi-right-overlay"></div>
+    <div class="testi-pull">
+      <div class="testi-pull-quote">"This is what car care looks like when people actually care."</div>
+      <div class="testi-pull-attr">— Kevin L., 2021 Audi Q5</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section id="cta-final">
+  <div class="cta-img-wrap reveal">
+    <img class="cta-img" src="ceramic-apply.png" alt="Book your detail" />
+    <div class="cta-img-overlay"></div>
+  </div>
+  <div class="cta-right">
+    <div class="section-eyebrow reveal">Ready to book?</div>
+    <h2 class="cta-h2 reveal d1">Transform your vehicle.<br><em>Book today.</em></h2>
+    <p class="cta-p reveal d2">Get in touch and we'll walk you through the right package for your car. Mobile service available — we come to you.</p>
+    <div class="cta-actions reveal d3">
+      <a href="tel:+1234567890" class="btn-primary">
+        📞 Call to Book
+      </a>
+      <a href="mailto:info@titaniumonecarcare.com" class="btn-outline">
+        Email Us →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <a href="#hero" class="footer-logo">
+      <img src="brand%20assets/Gemini_Generated_Image_y40iw2y40iw2y40i.png" alt="Titanium One Car Care" />
+    </a>
+    <ul class="footer-nav">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#testimonials">Reviews</a></li>
+      <li><a href="#promo">About</a></li>
+      <li><a href="#cta-final">Contact</a></li>
+    </ul>
+    <div class="footer-social">
+      <a href="#" class="social-btn" aria-label="Facebook">f</a>
+      <a href="#" class="social-btn" aria-label="Instagram">ig</a>
+      <a href="#" class="social-btn" aria-label="TikTok">tk</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 <em>Titanium One Car Care</em>. All rights reserved.</div>
+    <div class="footer-copy">Mon–Sat 8am–6pm · (123) 456-7890</div>
+  </div>
+</footer>
+
+
+<script>
+  // Nav scroll state
+  const nav = document.getElementById('mainNav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 60);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => observer.observe(el));
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+</script>
+</body>
+</html>
